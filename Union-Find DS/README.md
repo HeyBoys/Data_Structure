@@ -7,6 +7,12 @@
 ``` cpp
 class union_find
 {
+public:
+	union_find(int n);
+	~union_find();
+	int FindSet(int i);
+	bool IsSameSet(int i, int j);
+	void UnionSet(int i, int j);
 private:
 	int n;
 	int *parent,*rank;
@@ -14,4 +20,48 @@ private:
 
 ``` 
 
-并查集采用两个一维数组存储每个结点的信息。
+并查集采用树形结构进行存储，为每个集合建立一棵树，集合的代表元即为此树的根节点。整个并查集为一个森林。
+
+并查集采用两个一维数组存储每个结点的信息。parent[i]代表第i个结点的父亲结点号，当此结点为根结点时指向自己。rank[i]代表以i为根节点的树的高度。
+## 3.算法
+### 3.1 union_find(int n)
+``` cpp
+union_find::union_find(int n)
+{
+	this->n = n;
+	parent = new int[n];
+	rank = new int[n];
+	for (int i = 0; i < n; i++)
+	{
+		parent[i] = i;
+		rank[i] = 0;
+	}
+}
+```
+
+并查集的构造函数，用于分配内存空间以及初始化
+### 3.2 FindSet(int i)
+``` cpp
+int union_find::FindSet(int i)
+{
+	if (parent[i] == i)
+		return i;
+	else 
+	return parent[i] = FindSet(parent[i]); 
+}
+```
+
+返回i号节点所在集合的代表元。
+
+**路径压缩**
+
+为了加快查找速度，查找时将i到根节点路径上的所有点的parent设为根节点，该优化方法称为压缩路径。使用该优化后，平均复杂度可视为Ackerman函数的反函数，实际应用中可粗略认为其是一个常数。
+### 3.3 IsSameSet(int i, int j)
+``` cpp
+bool union_find::IsSameSet(int i, int j)
+{
+	return FindSet(i) == FindSet(j);
+}
+```
+
+
