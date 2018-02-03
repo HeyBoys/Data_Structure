@@ -53,11 +53,13 @@ int union_find::FindSet(int i)
 
 返回i号节点所在集合的代表元。
 
-![并查集的树形结构3.2(a)](3.2(a).png)
-
 **路径压缩**
 
 为了加快查找速度，查找时将i到根节点路径上的所有点的parent设为根节点，该优化方法称为压缩路径。使用该优化后，平均复杂度可视为Ackerman函数的反函数，实际应用中可粗略认为其是一个常数。
+
+![](3.2(a).png) ![](3.2(b).png)
+
+并查集的树形结构3.2(a) 　　　　路径压缩后的树形结构3.2(b) 
 ### 3.3 IsSameSet(int i, int j)
 ``` cpp
 bool union_find::IsSameSet(int i, int j)
@@ -86,6 +88,8 @@ void union_find::UnionSet(int i, int j)
 
 将i所在集合与j所在集合合并
 
-**
+对于合并操作，假设需要合并的两个集合的代表元分别为x,y，则只需要`parent[x] = y `或者`parent[y] = x`即可。为了使合并后的树不产生退化，应使树中左右子树的深度差尽可能小，对于每一个元素x，维护rank[x]为以x为根的子树的深度。合并时，如果`rank[x]<rank[y]`，则令`parent[x] = y`，否则令`parent[y] = x`.
 
+![](3.4(a).png)　　　　![](3.4(a).png)  
 
+合并前的树形结构3.4(a)　　　　　　　　合并后的树形结构3.4(b)
